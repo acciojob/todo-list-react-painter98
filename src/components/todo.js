@@ -13,11 +13,6 @@ function Todo(){
 
     function editing(idx){
         setTask(tasks[idx]);
-
-        return (<>
-            <input onChange={e=>setTask(e.target.value)} value={task}/>
-            <button className="save" onClick={()=>setTasks([...tasks,task])}>Save</button>
-        </>)
     }
 
     function deleting(idx){
