@@ -23,13 +23,13 @@ function Tasks({tasks,setTasks}){
   return (
     <div>
         <>
-          <input placeholder='Enter the task' value={task} onChange={e=>setTask(e.target.value)}/>
+          <input placeholder='Enter the task' value={task} onChange={e=>setTask(e.target.value)} className='add_tasks_section'/>
           <button onClick={handleAdd}>Add Task</button>
         </>
       <h1>My Tasks</h1>
       {console.log('my tasks',tasks)}
       
-      <ol>
+      <ol className='tasks_section'>
         {tasks.length>0 && tasks.map((item,idx) => 
           <Task item={item} idx={idx} onchange={handleSave} ondelete={handleDelete} />
         )}
@@ -43,24 +43,26 @@ function Task({item,idx,onchange,ondelete}){
     let [newTask,setNewTask] = useState(item);
 
     return (
-        <li key={idx}>
+        <li key={idx} className='task'>
             {isEditing?
             <>
               <input placeholder='Enter the new task' value={newTask} onChange={e=>setNewTask(e.target.value)}/>
               <button onClick={()=>{
                 onchange(newTask,idx)
                 setIsEditing(false)
-                }}>Save</button>
+                }}
+                className='save'>Save</button>
               <button onClick={()=>setIsEditing(false)}>Cancel</button>
             </>
             :
             <>
               <span>{item}</span>
-              <button onClick={()=>setIsEditing(true)}>Edit</button>
+              <button onClick={()=>setIsEditing(true)} className='edit'>Edit</button>
               <button onClick={()=>{
                     setIsEditing(false);
                     ondelete(idx)
-                }}>Delete</button>
+                }}
+                className='delete'>Delete</button>
             </>}
           </li>
     )
