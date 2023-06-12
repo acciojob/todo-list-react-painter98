@@ -1,45 +1,68 @@
-import React, { useState } from "react";
+import React,{useState} from 'react';
 
+function Tasks({tasks,setTasks}){
+    
+  let [task,setTask] = useState('');
 
-function Todo(){
-    let [tasks,setTasks] = useState([]);
-    let [task,setTask] = useState('');
+  let handleAdd = () => {
+    task!==''?setTasks([...tasks,task]):setTasks([...tasks])
+    setTask('');
+    console.log('all to contact',tasks);
+  }
 
-    let addTask = ()=>{
-        console.log('hii');
-        setTasks([...tasks,task]);
-        setTask('');
-    }
+  let handleDelete = (idx) => {
+    let newTask = tasks.filter((_,id) => id !== idx);
+    setTasks(newTask);
+  }
 
-    function editing(idx){
-        setTask(tasks[idx]);
-    }
+  let handleSave = (update,idx) => {
+    tasks[idx] = update;
+    setTasks([...tasks]);
+  }
 
-    function deleting(idx){
-        let newTask = tasks.filter((_,index)=>index!==idx)
-        setTasks(newTask);
-    }
-
-    return (
-        <div className="add_tasks_section">
-            <input type='text' className="task" placeholder='enter the tasks' onChange={e=>setTask(e.target.value)} value={task}/>
-            <button onClick={addTask}>Add</button>
-            <ul className="tasks_section">
-               
-               { tasks.map((element,idx)=>{
-               return(
-                <>
-                 <li key={`n${idx}`}>
-                    {element}
-                    <button className="edit" onClick={()=>editing(idx)}>Edit</button>
-                    <button className="delete" onClick={()=>deleting(idx)}>Delete</button>{/*need to pass as arrow function reference to avoid calling function on rendering */}
-                </li> 
-                </>
-                )}
-                )}
-            </ul>
-        </div>
-    )
+  return (
+    <div>
+        <>
+          <input placeholder='Enter the task' value={task} onChange={e=>setTask(e.target.value)}/>
+          <button onClick={handleAdd}>Add Task</button>
+        </>
+      <h1>My Tasks</h1>
+      {console.log('my tasks',tasks)}
+      
+      <ol>
+        {tasks.length>0 && tasks.map((item,idx) => 
+          <Task item={item} idx={idx} onchange={handleSave} ondelete={handleDelete} />
+        )}
+        </ol>
+    </div>
+  )
 }
 
-export default Todo;
+function Task({item,idx,onchange,ondelete}){
+    let [isEditing,setIsEditing] = useState(false);
+    let [newTask,setNewTask] = useState(item);
+
+    return (
+        <li key={idx}>
+            {isEditing?
+            <>
+              <input placeholder='Enter the new task' value={newTask} onChange={e=>setNewTask(e.target.value)}/>
+              <button onClick={()=>{
+                onchange(newTask,idx)
+                setIsEditing(false)
+                }}>Save</button>
+              <button onClick={()=>setIsEditing(false)}>Cancel</button>
+            </>
+            :
+            <>
+              <span>{item}</span>
+              <button onClick={()=>setIsEditing(true)}>Edit</button>
+              <button onClick={()=>{
+                    setIsEditing(false);
+                    ondelete(idx)
+                }}>Delete</button>
+            </>}
+          </li>
+    )
+}
+export default Tasks;
